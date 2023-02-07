@@ -1,6 +1,5 @@
 package org.newtictactoe;
 
-
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -27,6 +26,7 @@ public class Main {
         boolean isThereAWinner = false;
         boolean isDraw = false;
 
+        //display the menu
         System.out.println("Do you want to: ");
         System.out.println("1-Continue the previous game");
         System.out.println("2-Start new game");

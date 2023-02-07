@@ -1,0 +1,1 @@
+typeSearchIndex = [{"l":"All Classes and Interfaces","u":"allclasses-index.html"},{"p":"org.newtictactoe","l":"Board"},{"p":"org.newtictactoe","l":"Main"},{"p":"org.newtictactoe","l":"Player"},{"p":"org.newtictactoe","l":"StateManager"},{"p":"org.newtictactoe","l":"Symbol"}];updateSearchResults();
