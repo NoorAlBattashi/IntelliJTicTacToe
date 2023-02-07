@@ -16,8 +16,13 @@ import com.google.gson.reflect.TypeToken;
 public class StateManager {
     private static final String FILE_PATH = "data/TicTacToe.json";
 
+    /**
+     * This method used to get the previous game to continue playing with it
+     *
+     * @return storeValues
+     */
     public HashMap<String, String[][]> getPreviousGame() {
-// Read json file
+        // Read json file
         File dataFile = new File(FILE_PATH);
         // create hashmaps to store the values
         HashMap<String, String[][]> storeValues = new HashMap<String, String[][]>();
@@ -32,6 +37,7 @@ public class StateManager {
                 }.getType();
                 Map<String, String[][]> myMap = gson.fromJson(scanFile.nextLine(), type);
 
+                //store the data in another hashmap to use them later in the game
                 for (String iString : myMap.keySet()) {
                     storeValues.put(iString, myMap.get(iString));
                 }
@@ -45,7 +51,9 @@ public class StateManager {
         return storeValues;
     }
 
-
+    /**
+     * This method used to clear the file from any data
+     */
     public void clearFile() {
         try (FileWriter filrWriter = new FileWriter(FILE_PATH)) {
             Gson gson = new GsonBuilder().create();
@@ -55,6 +63,12 @@ public class StateManager {
         }
     }
 
+    /**
+     * This method used to store the data fo the game
+     *
+     * @param name
+     * @param array
+     */
     public static void storeTheGame(String name, String[][] array) {
         HashMap<String, String[][]> store = new HashMap<String, String[][]>();
         store.put(name, array);

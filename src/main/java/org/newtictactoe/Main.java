@@ -39,15 +39,20 @@ public class Main {
             HashMap<String, String[][]> storeValues = new HashMap<String, String[][]>();
             storeValues = manager.getPreviousGame();
             // Add the values inside the variables
-            Symbol player1Symbol = new Symbol(storeValues.get("playersSymbol")[0][1]);
-            Symbol player2Symbol = new Symbol(storeValues.get("playersSymbol")[1][1]);
+            String player1Name = storeValues.get("playersName")[0][1];
+            String player2Name = storeValues.get("playersName")[1][1];
+            String player1Symbol = storeValues.get("playersSymbol")[0][1];
+            String player2Symbol = storeValues.get("playersSymbol")[1][1];
             PlayerOneTurn = Boolean.parseBoolean(storeValues.get("playersturn")[0][1]);
             PlayerTwoTurn = Boolean.parseBoolean(storeValues.get("playersturn")[1][1]);
             validTurnsCounter = Integer.valueOf(storeValues.get("validTurnsCounter")[0][1]);
             boardOfGame.setBoard(storeValues.get("ticTacToeArr"));
 
+            //add players
+            Player player1 = new Player(player1Name, player1Symbol);
+            Player player2 = new Player(player2Name, player2Symbol);
             // continue the game
-            startGame(validTurnsCounter, isThereAWinner, isDraw, player1Symbol.getSymbol(), player2Symbol.getSymbol(), PlayerOneTurn,
+            startGame(validTurnsCounter, isThereAWinner, isDraw, player1, player2, PlayerOneTurn,
                     PlayerTwoTurn, boardOfGame.getBoard());
             // 2 means start new game
         } else if (choose == 2) {
@@ -55,23 +60,38 @@ public class Main {
             manager.clearFile();
             // display the board
             boardOfGame.printBoard();
-            // players select there symbol
-            System.out.print("Player 1 write your Symbol: ");
+
+            // player1 details
+            System.out.print("Player 1 write your name: ");
+            String player1Name = stringScanner();
+            System.out.print(player1Name + ", write your Symbol: ");
             String player1Symbol = stringScanner();
-            Symbol player1 = new Symbol(player1Symbol);
-            System.out.print("Player 2 write your Symbol: ");
+
+            //player2 details
+            System.out.print("Player 2 write your name: ");
+            String player2Name = stringScanner();
+            System.out.print(player2Name + ", write your Symbol: ");
             String player2Symbol = stringScanner();
-            Symbol player2 = new Symbol(player2Symbol);
             System.out.println();
 
-            // new game
-            startGame(validTurnsCounter, isThereAWinner, isDraw, player1.getSymbol(), player2.getSymbol(), PlayerOneTurn,
+            //add players
+            Player player1 = new Player(player1Name, player1Symbol);
+            Player player2 = new Player(player2Name, player2Symbol);
+
+            // start new game
+            startGame(validTurnsCounter, isThereAWinner, isDraw, player1, player2, PlayerOneTurn,
                     PlayerTwoTurn, boardOfGame.getBoard());
         } else {
             System.out.println("Wrong Selection!!");
         }
     }
 
+    /**
+     * This method used to get String input from the user
+     *
+     * @return outputValue
+     * @return stringScanner()
+     */
     public static String stringScanner() {
         try {
             Scanner inputScanner = new Scanner(System.in);
@@ -84,6 +104,12 @@ public class Main {
         }
     }
 
+    /**
+     * This method used to get int input from the user
+     *
+     * @return outputValue
+     * @return intScanner()
+     */
     public static int intScanner() {
         try {
             Scanner inputScanner = new Scanner(System.in);
@@ -96,8 +122,21 @@ public class Main {
         }
     }
 
-    public static void startGame(int validTurnsCounter, boolean isThereAWinner, boolean isDraw, String player1Symbol,
-                                 String player2Symbol, boolean PlayerOneTurn, boolean PlayerTwoTurn, String[][] ticTacToeArr) {
+    /**
+     * This method used to start playing the game
+     *
+     * @param validTurnsCounter
+     * @param isThereAWinner
+     * @param isDraw
+     * @param player1
+     * @param player2
+     * @param playerOneTurn
+     * @param playerTwoTurn
+     * @param ticTacToeArr
+     */
+    public static void startGame(int validTurnsCounter, boolean isThereAWinner, boolean isDraw, Player player1,
+                                 Player player2, boolean playerOneTurn, boolean playerTwoTurn, String[][] ticTacToeArr) {
+
         // LOOP TO CONTINUE THE GAME
         while (validTurnsCounter < 9 && isThereAWinner == false && isDraw == false) {
             // display the board
@@ -106,13 +145,19 @@ public class Main {
             int playerchoice = intScanner();
             // exit the game
             if (playerchoice == 0) {
+                //clear the file to make sure it is empty from any previous game
+                manager.clearFile();
+                //add player names
+                String[][] playersNameStrings = {{"player1Name", player1.getplayerName()},
+                        {"player2Name", player2.getplayerName()}};
+                manager.storeTheGame("playersName", playersNameStrings);
                 // add Symbols
-                String[][] playersSymbolStrings = {{"player1Symbol", player1Symbol},
-                        {"player2Symbol", player2Symbol}};
+                String[][] playersSymbolStrings = {{"player1Symbol", player1.getSymbol()},
+                        {"player2Symbol", player2.getSymbol()}};
                 manager.storeTheGame("playersSymbol", playersSymbolStrings);
                 // add playersturn
-                String[][] playersturnStrings = {{"PlayerOneTurn", String.valueOf(PlayerOneTurn)},
-                        {"PlayerTwoTurn", String.valueOf(PlayerTwoTurn)}};
+                String[][] playersturnStrings = {{"PlayerOneTurn", String.valueOf(playerOneTurn)},
+                        {"PlayerTwoTurn", String.valueOf(playerTwoTurn)}};
                 manager.storeTheGame("playersturn", playersturnStrings);
                 // add validTurnsCounter
                 String[][] counterStrings = {{"validTurnsCounter", Integer.toString(validTurnsCounter)}};
@@ -124,58 +169,57 @@ public class Main {
                 break;
             } else if (playerchoice == 1) {
                 // player 1 turn
-                if (PlayerOneTurn == true && PlayerTwoTurn == false && isThereAWinner == false && isDraw == false) {
-                    // player 1 select move
+                if (playerOneTurn == true && playerTwoTurn == false && isThereAWinner == false && isDraw == false) {
 
+                    // player 1 select move
                     System.out.println();
-                    System.out.print("Player 1, Make a move, Enter position: ");
+                    System.out.print(player1.getplayerName() + ", Make a move, Enter position: ");
                     int player1Move = intScanner();
 
                     // check the selection position of player1 and add value
-                    if (PlayerOneTurn == true && PlayerTwoTurn == false) {
-                        PlayerOneTurn = boardOfGame.checkMove(player1Move, boardOfGame.getBoard(), player1Symbol, PlayerOneTurn);
-                        if (PlayerOneTurn == false) {
-                            PlayerTwoTurn = true;
+                    if (playerOneTurn == true && playerTwoTurn == false) {
+                        playerOneTurn = boardOfGame.checkMove(player1Move, boardOfGame.getBoard(), player1.getSymbol(), playerOneTurn);
+                        if (!playerOneTurn) {
+                            playerTwoTurn = true;
                             validTurnsCounter++;
                         } else {
-                            PlayerOneTurn = true;
-                            PlayerTwoTurn = false;
+                            playerOneTurn = true;
+                            playerTwoTurn = false;
                         }
                     }
 
                     // check winner
-                    if (isThereAWinner == false) {
-                        isThereAWinner = checkWinner(ticTacToeArr, player1Symbol);
+                    if (!isThereAWinner) {
+                        isThereAWinner = checkWinner(ticTacToeArr, player1);
                     }
 
                     // check Draw
-                    if (isThereAWinner == false) {
+                    if (!isThereAWinner) {
                         isDraw = checkDraw(ticTacToeArr);
                     }
 
                     // player 2 turn
-                    if (PlayerOneTurn == false && PlayerTwoTurn == true && isThereAWinner == false && isDraw == false) {
+                    if (playerOneTurn == false && playerTwoTurn == true && isThereAWinner == false && isDraw == false) {
                         System.out.println();
-                        System.out.print("Player 2, Make a move, Enter position: ");
+                        System.out.print(player2.getplayerName() + ", Make a move, Enter position: ");
                         Scanner player2Movesc = new Scanner(System.in);
                         int player2Move = Integer.parseInt(player2Movesc.nextLine());
 
                         // check the selection position of player2 and add value
-                        if (PlayerTwoTurn == true && PlayerOneTurn == false) {
-                            PlayerTwoTurn = boardOfGame.checkMove(player2Move, boardOfGame.getBoard(), player2Symbol, PlayerTwoTurn);
-                            if (PlayerTwoTurn == false) {
-                                PlayerOneTurn = true;
+                        if (playerTwoTurn == true && playerOneTurn == false) {
+                            playerTwoTurn = boardOfGame.checkMove(player2Move, boardOfGame.getBoard(), player2.getSymbol(), playerTwoTurn);
+                            if (!playerTwoTurn) {
+                                playerOneTurn = true;
                                 validTurnsCounter++;
                             } else {
-                                PlayerTwoTurn = true;
-                                PlayerOneTurn = false;
+                                playerTwoTurn = true;
+                                playerOneTurn = false;
                             }
                         }
 
                         // check winner
                         if (!isThereAWinner) {
-                            isThereAWinner = checkWinner(ticTacToeArr, player2Symbol);
-                            checkWinner(ticTacToeArr, player2Symbol);
+                            isThereAWinner = checkWinner(ticTacToeArr, player2);
                         }
 
                     }
@@ -188,7 +232,15 @@ public class Main {
         } // loop
     }
 
-    private static boolean checkWinner(String[][] board, String symbol) {
+    /**
+     * This method used to check if there is a winner
+     *
+     * @param board
+     * @param p
+     * @return playerWon
+     */
+    private static boolean checkWinner(String[][] board, Player p) {
+        String symbol = p.getSymbol();
         boolean playerWon = false;
         if (board[0][0].equals(symbol) && board[0][1].equals(symbol) && board[0][2].equals(symbol)
                 || board[1][0].equals(symbol) && board[1][1].equals(symbol) && board[1][2].equals(symbol)
@@ -203,13 +255,19 @@ public class Main {
             boardOfGame.printBoard();
 
             // display win message
-            System.out.println(symbol + ", You win !");
+            System.out.println(p.getplayerName() + ", You win !");
             playerWon = true;
             manager.clearFile();
         }
         return playerWon;
     }
 
+    /**
+     * This method used to check if the game draw
+     *
+     * @param board
+     * @return Draw
+     */
     private static boolean checkDraw(String[][] board) {
         boolean Draw = false;
         if (!board[0][0].equals("1") && !board[0][1].equals("2") && !board[0][2].equals("3") && !board[1][0].equals("4")

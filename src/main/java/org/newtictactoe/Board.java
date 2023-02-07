@@ -4,11 +4,16 @@ public class Board {
     private int BOARD_SIZE = 3;
     private String[][] board;
 
-
+    /**
+     * This method used to create a board
+     */
     public Board() {
         board = new String[][]{{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
     }
 
+    /**
+     * This method used to display the board in the game
+     */
     public void printBoard() {
         System.out.println();
         System.out.println(board[0][0] + "  |  " + board[0][1] + "  |  " + board[0][2]);
@@ -19,15 +24,34 @@ public class Board {
         System.out.println();
     }
 
+    /**
+     * This method used to get the board array
+     *
+     * @return board
+     */
     public String[][] getBoard() {
         return board;
     }
 
+    /**
+     * This method used to set the board game
+     *
+     * @param ticTacToe
+     */
     public void setBoard(String[][] ticTacToe) {
         board = ticTacToe;
     }
 
-    public boolean checkMove(int playerMove, String[][] board, String p, boolean PlayerTurn) {
+    /**
+     * This method used to check the available locations in the board and set the player symbols
+     *
+     * @param playerMove
+     * @param board
+     * @param p
+     * @param playerTurn
+     * @return playerTurn
+     */
+    public boolean checkMove(int playerMove, String[][] board, String p, boolean playerTurn) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -61,16 +85,16 @@ public class Board {
             colIndex = 2;
         } else {
             System.out.println("Wrong selection");
-            PlayerTurn = true;
+            playerTurn = true;
         }
         if (!board[rowIndex][colIndex].equals(p)) {
             this.board[rowIndex][colIndex] = p;
-            PlayerTurn = false;
+            playerTurn = false;
         } else {
             System.out.println("The position already choosen");
-            PlayerTurn = true;
+            playerTurn = true;
         }
-        return PlayerTurn;
+        return playerTurn;
     }
 
 }
