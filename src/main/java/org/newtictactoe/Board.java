@@ -8,7 +8,7 @@ public class Board {
      * This method used to create a board
      */
     public Board() {
-        board = new String[][]{{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
+        this.board = new String[][]{{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}};
     }
 
     /**
@@ -46,12 +46,13 @@ public class Board {
      * This method used to check the available locations in the board and set the player symbols
      *
      * @param playerMove
-     * @param board
-     * @param p
+     * @param ticTacToeArr
+     * @param playerSympol
+     * @param otherPlayerSympol
      * @param playerTurn
      * @return playerTurn
      */
-    public boolean checkMove(int playerMove, String[][] board, String p, boolean playerTurn) {
+    public boolean checkMove(int playerMove, String[][] ticTacToeArr, String playerSympol, String otherPlayerSympol, boolean playerTurn) {
         int rowIndex = 0;
         int colIndex = 0;
 
@@ -87,8 +88,9 @@ public class Board {
             System.out.println("Wrong selection");
             playerTurn = true;
         }
-        if (!board[rowIndex][colIndex].equals(p)) {
-            this.board[rowIndex][colIndex] = p;
+        if (!ticTacToeArr[rowIndex][colIndex].equals(playerSympol) && !ticTacToeArr[rowIndex][colIndex].equals(otherPlayerSympol)) {
+            ticTacToeArr[rowIndex][colIndex] = playerSympol;
+            setBoard(ticTacToeArr);
             playerTurn = false;
         } else {
             System.out.println("The position already choosen");

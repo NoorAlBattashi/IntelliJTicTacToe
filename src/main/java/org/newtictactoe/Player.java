@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Player {
     private Symbol symbol;
     private String playerName;
+    private Board board = new Board();
 
     /**
      * This method used to create a player
@@ -37,4 +38,15 @@ public class Player {
         return symbol.getSymbol();
     }
 
+    public int makeMove(String[][] ticTacToeArr, String playerSymbol) {
+        try {
+            Scanner inputScanner = new Scanner(System.in);
+            int outputValue = inputScanner.nextInt();
+            return outputValue;
+        } catch (InputMismatchException e) {
+            System.out.println("Invalid input. It must be an integer.");
+            System.out.print("Enter again here: ");
+            return makeMove(ticTacToeArr, playerSymbol);
+        }
+    }
 }
